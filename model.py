@@ -23,6 +23,8 @@ class cell(enum.Enum):
     food = 1
 
 class model:
+    foodx = -1
+    foody = -1
     grid = None
     rows = 0
     cols = 0
@@ -34,6 +36,8 @@ class model:
         self.snake.append(snakeCell(direction.right, 2, self.cols - 1))
         self.snake.append(snakeCell(direction.right, 1, self.cols - 1))
         self.snake.append(snakeCell(direction.right, 0, self.cols - 1))
+
+        self.createFood()
     def nextMove(self, dirc = direction.null):
         if not (dirc == direction.null):
             self.snake[0].dir = dirc
@@ -59,7 +63,25 @@ class model:
                     elm.y -= 1
                 else:
                     return False
-                    
+
+        if self.snake[0].x == self.foodx and self.snake[0].y == self.foody:
+            lastSnakeCell = self.snake[len(self.snake) - 1]
+            if lastSnakeCell.dir == direction.left:
+                newSnakeCell = snakeCell(lastSnakeCell.dir, lastSnakeCell.x + 1, lastSnakeCell.y)
+            elif lastSnakeCell.dir == direction.up:
+                newSnakeCell = snakeCell(lastSnakeCell.dir, lastSnakeCell.x, lastSnakeCell.y - 1)
+            elif lastSnakeCell.dir == direction.right:
+                newSnakeCell = snakeCell(lastSnakeCell.dir, lastSnakeCell.x - 1, lastSnakeCell.y)
+            elif lastSnakeCell.dir == direction.down:
+                newSnakeCell = snakeCell(lastSnakeCell.dir, lastSnakeCell.x, lastSnakeCell.y + 1)
+
+            self.snake.append(newSnakeCell)
+            self.grid[self.foodx][self.foody] = cell.null
+            self.foodx = -1
+            self.foody = -1
+
+            self.createFood()
+
         for i in range(len(self.snake) - 1, 0, -1):
             self.snake[i].dir = self.snake[i - 1].dir
                 
@@ -77,6 +99,8 @@ class model:
         
         foodCell = random.choice(possibleCells)
         self.grid[foodCell[0]][foodCell[1]] = cell.food
+        self.foodx = foodCell[0]
+        self.foody = foodCell[1]
 
         
 
