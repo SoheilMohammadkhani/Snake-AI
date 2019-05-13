@@ -38,6 +38,21 @@ class model:
         self.snake.append(snakeCell(direction.right, 0, self.cols - 1))
 
         self.createFood()
+    def checkLose(self):
+        head = self.snake[0]
+        if head.dir == direction.left and head.x <= 0:
+            return True
+        elif head.dir == direction.up and head.y >= self.cols - 1:
+            return True
+        elif head.dir == direction.right and head.x >= self.rows - 1:
+            return True
+        elif head.dir == direction.down and head.y <= 0:
+            return True
+
+        for i in range(1, len(self.snake)):
+            if (head.x == self.snake[i].x and head.y == self.snake[i].y):
+                return True
+
     def nextMove(self, dirc = direction.null):
         if not (dirc == direction.null):
             self.snake[0].dir = dirc
