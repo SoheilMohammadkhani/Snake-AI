@@ -3,20 +3,30 @@ import model
 import time
 import keyboard
 import threading
+import os
 from msvcrt import getch
 
 m = model.model(10, 10)
 
 move = False
+not_Lose = True
+
+chengeColor = lambda: os.system('color 04')
+chengeColor()
 
 def normalMove():
-    while True:
+    global not_Lose
+    while not_Lose:
         m.nextMove(model.direction.null)
         time.sleep(0.25);   
         view.view.printMap(m)
+        if m.checkLose():
+            not_Lose = False
+            
 
 def keyboardMove():
-    while True:
+    global not_Lose
+    while not_Lose:
         key = ord(getch())
         if key == 224:
             key = ord(getch())
@@ -31,6 +41,9 @@ def keyboardMove():
             
             time.sleep(0.25);   
             view.view.printMap(m)
+
+            if m.checkLose():
+                not_Lose = False
 
 threading.Thread(target = normalMove).start()
 threading.Thread(target = keyboardMove).start()
