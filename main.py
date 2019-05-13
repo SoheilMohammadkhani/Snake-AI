@@ -4,6 +4,7 @@ import time
 import keyboard
 import threading
 import os
+import keras
 from msvcrt import getch
 
 m = model.model(10, 10)
