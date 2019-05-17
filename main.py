@@ -5,7 +5,21 @@ import keyboard
 import threading
 import os
 import keras
+from keras.models import Sequential
+from keras.layers import Dense, Activation
 from msvcrt import getch
+
+class Indivitual:
+    value = Sequential()
+    fitness = 0
+    def __init__(self, val):
+        self.value = val
+    def fitnessPow2(self):
+        return self.fitness * self.fitness
+
+pool = []
+
+popSize = 100
 
 m = model.model(10, 10)
 
@@ -15,38 +29,26 @@ not_Lose = True
 chengeColor = lambda: os.system('color 04')
 chengeColor()
 
-def normalMove():
-    global not_Lose
-    while not_Lose:
-        m.nextMove(model.direction.null)
-        time.sleep(0.25);   
-        view.view.printMap(m)
-        if m.checkLose():
-            not_Lose = False
-            
+def createSnakeModel():
+    snakeModel = keras.models.Sequential()
+    snakeModel.add(Dense(units=4))
+    snakeModel.add(Activation("sigmoid"))
+    snakeModel.add(Dense(units=3))
+    snakeModel.add(Activation("sigmoid"))
+    return snakeModel
 
-def keyboardMove():
-    global not_Lose
-    while not_Lose:
-        key = ord(getch())
-        if key == 224:
-            key = ord(getch())
-            if key == 80:
-                m.nextMove(model.direction.down)
-            elif key == 72:
-                m.nextMove(model.direction.up)
-            elif key == 75:
-                m.nextMove(model.direction.left) 
-            elif key == 77:
-                m.nextMove(model.direction.right) 
-            
-            time.sleep(0.25);   
-            view.view.printMap(m)
+def createPop():
+    global pool
+    for i in range(popSize):
+        tmpIndivitual = Indivitual(createSnakeModel())
+        pool.append(tmpIndivitual)
 
-            if m.checkLose():
-                not_Lose = False
+'''
+ Main Func
+'''
 
-threading.Thread(target = normalMove).start()
-threading.Thread(target = keyboardMove).start()
+createPop()
 
-print("end")
+print(popSize)
+
+print(len(pool))
